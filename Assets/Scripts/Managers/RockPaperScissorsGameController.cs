@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-
 using UnityEngine.UIElements;
 using static Helpers.GameEnums;
 
@@ -18,6 +17,7 @@ public class RockPaperScissorsGameController : MonoBehaviour, IGameObserver
     [SerializeField] private AudioClip loseSound;
     [SerializeField] private AudioClip drawSound;
     [SerializeField] private AudioClip buttonClickSound;
+    [SerializeField] private AudioClip gameEndSound;
 
     // Dependencies (SOLID - Dependency Inversion Principle)
     private IBotStrategy botStrategy;
@@ -87,8 +87,8 @@ public class RockPaperScissorsGameController : MonoBehaviour, IGameObserver
 
         var root = uiDocument.rootVisualElement;
 
-        // Create the main UI organism
-        gameUIComponent = new GameUIOrganism(root);
+        // Create the main UI organism with sprite mapping
+        gameUIComponent = new GameUIOrganism(root, spriteMap);
 
         // Wire up events
         gameUIComponent.OnPlayerChoice += HandlePlayerChoice;
@@ -117,20 +117,20 @@ public class RockPaperScissorsGameController : MonoBehaviour, IGameObserver
         // Update scores
         UpdateScores();
 
-        // Play result sound
-        PlayResultSound(gameState.lastResult);
-
-        // Update UI
+        // Update UI first
         UpdateUI();
 
         // Check for game completion
         if (gameService.IsGameComplete(gameState))
         {
             gameState.gameEnded = true;
+            PlaySound(gameEndSound);
             OnGameEnd(gameState);
         }
         else
         {
+            // Play result sound for regular rounds
+            PlayResultSound(gameState.lastResult);
             OnRoundComplete(gameState);
         }
     }
@@ -146,7 +146,6 @@ public class RockPaperScissorsGameController : MonoBehaviour, IGameObserver
             case GameResult.BotWin:
                 gameState.botScore++;
                 break;
-
         }
     }
 
@@ -238,6 +237,16 @@ public class RockPaperScissorsGameController : MonoBehaviour, IGameObserver
     public GameState GetCurrentGameState()
     {
         return gameState;
+    }
+
+    // Update sprite mapping if sprites change at runtime
+    public void UpdateSpriteMap(GameChoice choice, Sprite newSprite)
+    {
+        if (spriteMap.ContainsKey(choice))
+        {
+            spriteMap[choice] = newSprite;
+            gameUIComponent?.UpdateButtonSprites(spriteMap);
+        }
     }
 
     // Validation method for development

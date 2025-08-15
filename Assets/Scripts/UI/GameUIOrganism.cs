@@ -11,12 +11,12 @@ public class GameUIOrganism
     private BattleDisplayMolecule battleDisplay;
     private ChoiceButtonsMolecule choiceButtons;
     private Label resultLabel;
-    private Button resetButton;
+    private GameEndPopup gameEndPopup;
 
     public event Action<GameChoice> OnPlayerChoice;
     public event Action OnResetGame;
 
-    public GameUIOrganism(VisualElement parent)
+    public GameUIOrganism(VisualElement parent, Dictionary<GameChoice, Sprite> spriteMap)
     {
         var container = new VisualElement();
         container.style.flexDirection = FlexDirection.Column;
@@ -34,7 +34,7 @@ public class GameUIOrganism
         battleDisplay = new BattleDisplayMolecule(container);
 
         // Result label
-        resultLabel = new Label("Make your choice!");
+        resultLabel = new Label("انتخاب خود را بکنید!");
         resultLabel.style.fontSize = 20;
         resultLabel.style.color = Color.white;
         resultLabel.style.unityFontStyleAndWeight = FontStyle.Bold;
@@ -43,32 +43,15 @@ public class GameUIOrganism
         resultLabel.style.unityTextAlign = TextAnchor.MiddleCenter;
         container.Add(resultLabel);
 
-        choiceButtons = new ChoiceButtonsMolecule(container);
+        // Choice buttons (now with sprites and no reset button)
+        choiceButtons = new ChoiceButtonsMolecule(container, spriteMap);
 
-        // Reset button
-        resetButton = new Button();
-        resetButton.text = "New Game";
-        resetButton.style.backgroundColor = new Color(0.3f, 0.69f, 0.31f); // #4CAF50
-        resetButton.style.color = Color.white;
-        resetButton.style.borderTopLeftRadius = 5;
-        resetButton.style.borderTopRightRadius = 5;
-        resetButton.style.borderBottomLeftRadius = 5;
-        resetButton.style.borderBottomRightRadius = 5;
-        resetButton.style.paddingLeft = 20;
-        resetButton.style.paddingRight = 20;
-        resetButton.style.paddingTop = 10;
-        resetButton.style.paddingBottom = 10;
-        resetButton.style.borderLeftWidth = 0;
-        resetButton.style.borderRightWidth = 0;
-        resetButton.style.borderTopWidth = 0;
-        resetButton.style.borderBottomWidth = 0;
-        resetButton.style.fontSize = 16;
-        resetButton.style.marginTop = 20;
-        container.Add(resetButton);
-
-        // Wire up events
+        // Wire up choice button events
         choiceButtons.OnChoiceSelected += (choice) => OnPlayerChoice?.Invoke(choice);
-        resetButton.clicked += () => OnResetGame?.Invoke();
+
+        // Create game end popup
+        gameEndPopup = new GameEndPopup(parent);
+        gameEndPopup.OnNewGameRequested += () => OnResetGame?.Invoke();
 
         parent.Add(container);
     }
@@ -82,22 +65,33 @@ public class GameUIOrganism
         choiceButtons.HighlightChoice(gameState.playerChoice);
 
         UpdateResultText(gameState);
+
+        // Show popup if game ended
+        if (gameState.gameEnded)
+        {
+            gameEndPopup.Show(gameState);
+        }
+        else
+        {
+            gameEndPopup.Hide();
+        }
     }
 
     private void UpdateResultText(GameState gameState)
     {
         if (gameState.gameEnded)
         {
-            string winner = gameState.playerScore > gameState.botScore ? "Player" : "Bot";
-            resultLabel.text = $"🎉 {winner} Wins the Game! 🎉";
-            resultLabel.style.color = gameState.playerScore > gameState.botScore ? Color.green : Color.red;
+            // Don't show result text when popup is visible
+            resultLabel.style.display = DisplayStyle.None;
         }
         else
         {
+            resultLabel.style.display = DisplayStyle.Flex;
+
             resultLabel.text = gameState.lastResult switch
             {
-                GameResult.PlayerWin => "You Win This Round!",
-                GameResult.BotWin => "Bot Wins This Round!",
+                GameResult.PlayerWin => "You Win!",
+                GameResult.BotWin => "Bot Wins!",
                 GameResult.Draw => "It's a Draw!",
                 _ => "Make your choice!"
             };
@@ -110,5 +104,10 @@ public class GameUIOrganism
                 _ => Color.white
             };
         }
+    }
+
+    public void UpdateButtonSprites(Dictionary<GameChoice, Sprite> spriteMap)
+    {
+        choiceButtons.UpdateSprites(spriteMap);
     }
 }

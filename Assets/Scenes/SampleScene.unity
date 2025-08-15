@@ -360,6 +360,7 @@ MonoBehaviour:
   loseSound: {fileID: 8300000, guid: 89c16a27ceaf2484fb8fffffd541bf98, type: 3}
   drawSound: {fileID: 8300000, guid: e46cd6c7a351a9641bce01ef6712c066, type: 3}
   buttonClickSound: {fileID: 8300000, guid: 198272bc9bb7bfe4aa0f42ace6bee3a0, type: 3}
+  gameEndSound: {fileID: 8300000, guid: 97cce256df3fd574cb7e3f1198fb3334, type: 3}
 --- !u!114 &1419535009
 MonoBehaviour:
   m_ObjectHideFlags: 0
