@@ -1,0 +1,20 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="game-container" class="game-container">
+        <ui:VisualElement name="score-container" class="score-container">
+            <ui:VisualElement style="align-items: stretch;">
+                <ui:Label name="bot-score" text="0" class="score-label" />
+            </ui:VisualElement>
+            <ui:VisualElement style="align-items: flex-end;">
+                <ui:Label name="player-score" text="0" class="score-label" style="white-space: normal;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="choices-container" class="choices-container">
+            <ui:VisualElement style="align-items: center; margin-bottom: 30px;">
+                <ui:VisualElement name="bot-choice" class="choice-image" />
+            </ui:VisualElement>
+            <ui:VisualElement style="align-items: center; margin-top: 30px;">
+                <ui:VisualElement name="player-choice" class="choice-image" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
