@@ -64,7 +64,7 @@ Assets/
 ### Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/rock-paper-scissors-unity.git
+   git clone https://github.com/Mehrdadgame/rock-paper-scissors-unity.git
    ```
 
 2. Open the project in Unity
@@ -146,18 +146,7 @@ Modify USS files in `Assets/UI/USS/` to change the visual appearance.
 - **Flexbox Layout** - Responsive design
 - **Custom Controls** - Reusable UI components
 
-## 🔮 Future Enhancements
 
-- [ ] Multiplayer support
-- [ ] Different game modes (Best of 3, 7, etc.)
-- [ ] Tournament bracket system
-- [ ] Player statistics tracking
-- [ ] Advanced AI opponents
-- [ ] Animation system
-- [ ] Particle effects
-- [ ] Mobile touch controls
-- [ ] Save/Load game progress
-- [ ] Themes and customization
 
 ## 🤝 Contributing
 
@@ -183,7 +172,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Support
 
 If you encounter any issues or have questions:
-1. Check the [Issues](https://github.com/yourusername/rock-paper-scissors-unity/issues) page
+1. Check the [Issues](https://github.com/Mehrdadgame/rock-paper-scissors-unity/issues) page
 2. Create a new issue with detailed description
 3. Contact the maintainers
 
