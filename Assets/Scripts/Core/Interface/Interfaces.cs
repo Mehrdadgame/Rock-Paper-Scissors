@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Helpers.GameEnums;
 
-public class Interfaces
-{
 
-}
 public interface IBotStrategy
 {
     GameChoice MakeChoice();
