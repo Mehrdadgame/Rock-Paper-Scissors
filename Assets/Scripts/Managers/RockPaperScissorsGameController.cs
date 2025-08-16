@@ -12,7 +12,7 @@ public class RockPaperScissorsGameController : MonoBehaviour, IGameObserver
     [SerializeField] private Sprite scissorsSprite;
     [SerializeField] private Sprite defaultSprite;
 
-    [Header("Audio (Optional)")]
+    [Header("Audio")]
     [SerializeField] private AudioClip winSound;
     [SerializeField] private AudioClip loseSound;
     [SerializeField] private AudioClip drawSound;
@@ -239,45 +239,10 @@ public class RockPaperScissorsGameController : MonoBehaviour, IGameObserver
     public void OnGameEnd(GameState gameState)
     {
         string winner = gameState.playerScore > gameState.botScore ? "Player" : "Bot";
-        Debug.Log($"🎉 Game Complete! Winner: {winner} (Final Score: Player {gameState.playerScore} - Bot {gameState.botScore})");
+        Debug.Log($" Game Complete! Winner: {winner} (Final Score: Player {gameState.playerScore} - Bot {gameState.botScore})");
 
-        // Optional: Add game end effects here
-        StartGameEndEffect();
+
     }
 
-    // Optional game end visual effect
-    private void StartGameEndEffect()
-    {
-        // You can add particle effects, screen shake, or other visual feedback here
-        Debug.Log(" Game end celebration effect!");
-    }
 
-    // Public methods for external control (if needed)
-    public void SetBotStrategy(IBotStrategy newStrategy)
-    {
-        botStrategy = newStrategy ?? new RandomBotStrategy();
-    }
-
-    public GameState GetCurrentGameState()
-    {
-        return gameState;
-    }
-
-    // Update sprite mapping if sprites change at runtime
-    public void UpdateSpriteMap(GameChoice choice, Sprite newSprite)
-    {
-        if (spriteMap.ContainsKey(choice))
-        {
-            spriteMap[choice] = newSprite;
-            gameUIComponent?.UpdateButtonSprites(spriteMap);
-        }
-    }
-
-    // Validation method for development
-    private void OnValidate()
-    {
-        if (rockSprite == null) Debug.LogWarning("Rock sprite not assigned!");
-        if (paperSprite == null) Debug.LogWarning("Paper sprite not assigned!");
-        if (scissorsSprite == null) Debug.LogWarning("Scissors sprite not assigned!");
-    }
 }
