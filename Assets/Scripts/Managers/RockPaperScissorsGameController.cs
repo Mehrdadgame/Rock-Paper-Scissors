@@ -92,7 +92,11 @@ public class RockPaperScissorsGameController : MonoBehaviour, IGameObserver
 
         // Wire up events
         gameUIComponent.OnPlayerChoice += HandlePlayerChoice;
-        gameUIComponent.OnResetGame += ResetGame;
+        gameUIComponent.OnResetGame += () =>
+        {
+            Debug.Log("Reset game event received from UI");
+            ResetGame();
+        };
     }
 
     // Handle player choice input
@@ -117,18 +121,19 @@ public class RockPaperScissorsGameController : MonoBehaviour, IGameObserver
         // Update scores
         UpdateScores();
 
-        // Update UI first
-        UpdateUI();
-
-        // Check for game completion
+        // Check for game completion BEFORE updating UI
         if (gameService.IsGameComplete(gameState))
         {
             gameState.gameEnded = true;
             PlaySound(gameEndSound);
+            // Update UI after setting gameEnded to true
+            UpdateUI();
             OnGameEnd(gameState);
         }
         else
         {
+            // Update UI for regular rounds
+            UpdateUI();
             // Play result sound for regular rounds
             PlayResultSound(gameState.lastResult);
             OnRoundComplete(gameState);
@@ -156,6 +161,12 @@ public class RockPaperScissorsGameController : MonoBehaviour, IGameObserver
 
         Sprite playerSprite = GetSpriteForChoice(gameState.playerChoice);
         Sprite botSprite = GetSpriteForChoice(gameState.botChoice);
+
+        // If game state has no choices, use null/default sprites
+        if (gameState.playerChoice == GameChoice.None)
+            playerSprite = defaultSprite;
+        if (gameState.botChoice == GameChoice.None)
+            botSprite = defaultSprite;
 
         gameUIComponent.UpdateGameState(gameState, playerSprite, botSprite);
     }
@@ -192,8 +203,21 @@ public class RockPaperScissorsGameController : MonoBehaviour, IGameObserver
     // Reset game to initial state
     private void ResetGame()
     {
+        Debug.Log("ResetGame called");
+
+        // Create new game state
         gameState = new GameState();
-        UpdateUI();
+
+        // Force hide popup and reset UI
+        if (gameUIComponent != null)
+        {
+            // Hide popup first
+            gameUIComponent.HideGameEndPopup();
+            // Reset battle display to hide VS label
+            gameUIComponent.ResetBattleDisplay();
+            // Then update UI with new state
+            UpdateUI();
+        }
 
         Debug.Log("Game reset - New game started!");
     }
@@ -225,7 +249,7 @@ public class RockPaperScissorsGameController : MonoBehaviour, IGameObserver
     private void StartGameEndEffect()
     {
         // You can add particle effects, screen shake, or other visual feedback here
-        Debug.Log("🎊 Game end celebration effect!");
+        Debug.Log(" Game end celebration effect!");
     }
 
     // Public methods for external control (if needed)

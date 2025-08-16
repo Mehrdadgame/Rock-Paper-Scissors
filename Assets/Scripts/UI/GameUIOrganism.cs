@@ -34,7 +34,7 @@ public class GameUIOrganism
         battleDisplay = new BattleDisplayMolecule(container);
 
         // Result label
-        resultLabel = new Label("انتخاب خود را بکنید!");
+        resultLabel = new Label("Make your choice!");
         resultLabel.style.fontSize = 20;
         resultLabel.style.color = Color.white;
         resultLabel.style.unityFontStyleAndWeight = FontStyle.Bold;
@@ -51,7 +51,11 @@ public class GameUIOrganism
 
         // Create game end popup
         gameEndPopup = new GameEndPopup(parent);
-        gameEndPopup.OnNewGameRequested += () => OnResetGame?.Invoke();
+        gameEndPopup.OnNewGameRequested += () =>
+        {
+            Debug.Log("New game requested from popup");
+            OnResetGame?.Invoke();
+        };
 
         parent.Add(container);
     }
@@ -66,13 +70,15 @@ public class GameUIOrganism
 
         UpdateResultText(gameState);
 
-        // Show popup if game ended
+        // Show popup only if game ended and it's not already visible
         if (gameState.gameEnded)
         {
+            Debug.Log($"Game ended - showing popup! Player: {gameState.playerScore}, Bot: {gameState.botScore}");
             gameEndPopup.Show(gameState);
         }
         else
         {
+            // Make sure popup is hidden for active games
             gameEndPopup.Hide();
         }
     }
@@ -109,5 +115,17 @@ public class GameUIOrganism
     public void UpdateButtonSprites(Dictionary<GameChoice, Sprite> spriteMap)
     {
         choiceButtons.UpdateSprites(spriteMap);
+    }
+
+    // Method to manually hide the popup (used during reset)
+    public void HideGameEndPopup()
+    {
+        gameEndPopup?.Hide();
+    }
+
+    // Method to reset the battle display
+    public void ResetBattleDisplay()
+    {
+        battleDisplay?.Reset();
     }
 }

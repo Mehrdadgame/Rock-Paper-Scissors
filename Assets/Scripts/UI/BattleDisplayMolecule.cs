@@ -48,6 +48,21 @@ public class BattleDisplayMolecule
     {
         playerChoice.UpdateChoice(playerSprite);
         botChoice.UpdateChoice(botSprite);
+
+        // Only show VS when game is actually playing and both have made choices
+        bool shouldShowVS = playerSprite != null && botSprite != null &&
+                           playerSprite.name != "default" && botSprite.name != "default";
+
+        if (shouldShowVS)
+        {
+            vsLabel.style.display = DisplayStyle.Flex;
+            vsLabel.style.visibility = Visibility.Visible;
+        }
+        else
+        {
+            vsLabel.style.display = DisplayStyle.None;
+            vsLabel.style.visibility = Visibility.Hidden;
+        }
     }
 
     public void SetBattleResult(GameResult result)
@@ -73,5 +88,14 @@ public class BattleDisplayMolecule
 
         playerChoice.SetTitleColor(playerColor);
         botChoice.SetTitleColor(botColor);
+    }
+
+    public void Reset()
+    {
+        // Hide VS label on reset
+        vsLabel.style.display = DisplayStyle.None;
+        vsLabel.style.visibility = Visibility.Hidden;
+        playerChoice.SetTitleColor(Color.white);
+        botChoice.SetTitleColor(Color.white);
     }
 }
