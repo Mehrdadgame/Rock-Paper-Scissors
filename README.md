@@ -64,7 +64,7 @@ Assets/
 ### Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/rock-paper-scissors-unity.git
+   git clone https://github.com/Mehrdadgame/rock-paper-scissors-unity.git
    ```
 
 2. Open the project in Unity
